@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_keyloggerinjava" default="compile.module.keyloggerinjava">
+  <dirname property="module.keyloggerinjava.basedir" file="${ant.file.module_keyloggerinjava}"/>
+  
+  <property name="module.jdk.home.keyloggerinjava" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.keyloggerinjava" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.keyloggerinjava" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.keyloggerinjava" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="keyloggerinjava.output.dir" value="${module.keyloggerinjava.basedir}/out/production/KeyLoggerInJava"/>
+  <property name="keyloggerinjava.testoutput.dir" value="${module.keyloggerinjava.basedir}/out/test/KeyLoggerInJava"/>
+  
+  <path id="keyloggerinjava.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="keyloggerinjava.module.production.classpath">
+    <path refid="${module.jdk.classpath.keyloggerinjava}"/>
+    <fileset dir="${basedir}/libs">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  <path id="keyloggerinjava.runtime.production.module.classpath">
+    <pathelement location="${keyloggerinjava.output.dir}"/>
+    <fileset dir="${basedir}/libs">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  <path id="keyloggerinjava.module.classpath">
+    <path refid="${module.jdk.classpath.keyloggerinjava}"/>
+    <pathelement location="${keyloggerinjava.output.dir}"/>
+    <fileset dir="${basedir}/libs">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  <path id="keyloggerinjava.runtime.module.classpath">
+    <pathelement location="${keyloggerinjava.testoutput.dir}"/>
+    <pathelement location="${keyloggerinjava.output.dir}"/>
+    <fileset dir="${basedir}/libs">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.keyloggerinjava">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.keyloggerinjava">
+    <patternset refid="excluded.from.module.keyloggerinjava"/>
+  </patternset>
+  
+  <path id="keyloggerinjava.module.sourcepath">
+    <dirset dir="${module.keyloggerinjava.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.keyloggerinjava" depends="compile.module.keyloggerinjava.production,compile.module.keyloggerinjava.tests" description="Compile module KeyLoggerInJava"/>
+  
+  <target name="compile.module.keyloggerinjava.production" depends="register.custom.compilers" description="Compile module KeyLoggerInJava; production classes">
+    <mkdir dir="${keyloggerinjava.output.dir}"/>
+    <javac2 destdir="${keyloggerinjava.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.keyloggerinjava}/javac">
+      <compilerarg line="${compiler.args.keyloggerinjava}"/>
+      <bootclasspath refid="keyloggerinjava.module.bootclasspath"/>
+      <classpath refid="keyloggerinjava.module.production.classpath"/>
+      <src refid="keyloggerinjava.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.keyloggerinjava"/>
+    </javac2>
+    
+    <copy todir="${keyloggerinjava.output.dir}">
+      <fileset dir="${module.keyloggerinjava.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.keyloggerinjava.tests" depends="register.custom.compilers,compile.module.keyloggerinjava.production" description="compile module KeyLoggerInJava; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.keyloggerinjava" description="cleanup module">
+    <delete dir="${keyloggerinjava.output.dir}"/>
+    <delete dir="${keyloggerinjava.testoutput.dir}"/>
+  </target>
+</project>
